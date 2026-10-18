@@ -214,7 +214,12 @@ def test_trimmer_result_does_not_depend_on_chunking():
             trimmer = _trimmer()
             trimmer.record(stream[:150_000])
             trimmer.arm()
-            out, result, _ = _feed_in_chunks(trimmer, stream[100_000:], sizes)
+            out, result, consumed = _feed_in_chunks(trimmer, stream[100_000:], sizes)
+            # out ends wherever the last chunk did, so compare it against the
+            # stream position that chunk reached rather than across patterns
+            assert (
+                out == stream[100_000 + trimmer.last_trimmed_bytes : 100_000 + consumed]
+            ), (name, sizes)
             got = (result, trimmer.last_trimmed_bytes)
             if expected is None:
                 expected = got

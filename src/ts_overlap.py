@@ -50,8 +50,6 @@ class OverlapTrimmer:
         self._signature: Optional[bytes] = None
         self._search_buffer = bytearray()
         self._search_started_at: Optional[float] = None
-        # bytes of _search_buffer already searched (no match can start before
-        # _searched - len(signature) + 1, so later searches skip that part)
         self._searched = 0
         self.last_trimmed_bytes = 0
 
